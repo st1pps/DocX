@@ -3579,28 +3579,29 @@ namespace Xceed.Words.NET
       {
         var formattingMatch = true;
 
-        if( matchFormatting != null )
-        {
-          int processed = 0;
-
-          while( processed < match.Length )
+          if (matchFormatting != null)
           {
-            var run = this.GetFirstRunEffectedByEdit( match.Index + processed );
-            var rPr = run.Xml.Element( XName.Get( "rPr", DocX.w.NamespaceName ) );
-            if( rPr == null )
-            {
-              rPr = new Formatting().Xml;
-            }
+              int processed = 0;
 
-            // Make sure that every formatting element in matchFormatting.Xml is also in this run,
-            // if false => formatting does not match.
-            if( !HelperFunctions.ContainsEveryChildOf( matchFormatting.Xml, rPr, fo ) )
-            {
-              formattingMatch = false;
-              break;
-            }
+              while (processed < match.Length)
+              {
+                  var run = this.GetFirstRunEffectedByEdit(match.Index + processed);
+                  var rPr = run.Xml.Element(XName.Get("rPr", DocX.w.NamespaceName));
+                  if (rPr == null)
+                  {
+                      rPr = new Formatting().Xml;
+                  }
 
-            processed += run.Value.Length;
+                  // Make sure that every formatting element in matchFormatting.Xml is also in this run,
+                  // if false => formatting does not match.
+                  if (!HelperFunctions.ContainsEveryChildOf(matchFormatting.Xml, rPr, fo))
+                  {
+                      formattingMatch = false;
+                      break;
+                  }
+
+                  processed += run.Value.Length;
+              }
           }
 
           // Replace text when formatting matches.
@@ -3609,7 +3610,7 @@ namespace Xceed.Words.NET
             var newValue = regexMatchHandler.Invoke( match.Groups[ 1 ].Value );
             this.InsertText( match.Index + match.Value.Length, newValue, trackChanges, newFormatting );
             this.RemoveText( match.Index, match.Value.Length, trackChanges, removeEmptyParagraph );
-          }
+          
         }
       }
     }
